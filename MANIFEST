@@ -1,0 +1,6 @@
+lib/File/Filename.pm
+lib/File/Filename/Convention.pm
+t/0.t
+MANIFEST
+Makefile.PL
+META.yml                                 Module meta-data (added by MakeMaker)
