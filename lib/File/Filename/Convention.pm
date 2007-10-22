@@ -2,12 +2,11 @@ package File::Filename::Convention;
 use strict;
 use File::Filename 'get_filename_segments';
 require Exporter;
-use vars qw(@ISA @EXPORT_OK);
+use vars qw(@ISA @EXPORT_OK $VERSION);
 @ISA = qw(Exporter);
 @EXPORT_OK = (qw(get_filename_hash));
 
-
-our $VERSION = sprintf "%d.%02d", q$Revision: 1.4 $ =~ /(\d+)/g;
+$VERSION = sprintf "%d.%02d", q$Revision: 1.2 $ =~ /(\d+)/g;
 $File::Filename::Convention::DEBUG = 0;
 sub DEBUG : lvalue { $File::Filename::Convention::DEBUG }
 
@@ -224,7 +223,7 @@ L<File::Name>
 
 =head1 Revision
 
-$Revision: 1.4 $
+$Revision: 1.2 $
 
 =head1 AUTHOR
 

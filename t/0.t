@@ -3,8 +3,6 @@ use strict;
 use lib './lib';
 use File::Filename 'get_filename_segments';
 use File::Filename::Convention 'get_filename_hash';
-use YAML;
-use Smart::Comments;
 
 my @filenames = (
 '122106-VERIZON 17577-005761-@API.pdf',
@@ -79,14 +77,11 @@ for (@filenames){
 
 my $filenaming_convention_fields= [
 	['date','vendor','checknum',[ code => 'API' ],'ext'],	
-
 	['date','vendor','checknum', 'extra', [ code => 'APX' ],'ext'],	
-	
 	['date','vendor',[code=>'NOCHECKNUM'],'ext'],	
 	['name','code','ext'],	
 ];
 
-YAML::DumpFile( '/tmp/fnc.conf', $filenaming_convention_fields);
 
 
 my $filenaming_convention_matchsubs = {
