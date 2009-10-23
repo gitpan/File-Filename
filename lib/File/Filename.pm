@@ -1,30 +1,28 @@
 package File::Filename;
 use strict;
 require Exporter;
-use vars qw(@ISA @EXPORT_OK $VERSION);
+use vars qw(@ISA @EXPORT_OK $VERSION $delimiter);
 @ISA = qw(Exporter);
 @EXPORT_OK = (qw(get_filename_segments));
-$VERSION = sprintf "%d.%02d", q$Revision: 1.2 $ =~ /(\d+)/g;
+$VERSION = sprintf "%d.%02d", q$Revision: 1.5 $ =~ /(\d+)/g;
 
-$File::Filename::delimiter = qr/[^a-zA-Z0-9 ]+/;
+$delimiter = qr/[^a-zA-Z0-9 ]+/;
 
 sub get_filename_segments {
 	my $filename = shift;
 	$filename or warn('get_fields_arrayref() no arg.') and return;	
 	my $delimiters = shift;	
-	$delimiters ||= 	$File::Filename::delimiter;
+	$delimiters ||= 	$delimiter;
 
    $filename=~s/\/+$//;
 	$filename=~s/^.+\/+//; # take out slashes if present
 	
-	my @fields = 
+	[ 
       map { $_=~s/^\s+|\s+$//g; $_ }
       grep { /./ } # dont use empty elements
-      split( /$delimiters/, $filename);
-
-	return \@fields;	
+      split( /$delimiters/, $filename)
+   ]
 }
-
 
 1;
 
@@ -53,7 +51,6 @@ needs of people maintaining such filesystem hierarchy structures.
 =head1 SYNOPSIS
 
 	use File::Filename 'get_filename_segments';
-	use Smart::Comments '###';
 	
 	opendir(DIR,$ENV{HOME});
 	
@@ -97,12 +94,23 @@ Empty segments are not returned.
 
 L<File::Filename::Convention>
 
-=head1 Revision
-
-$Revision: 1.2 $
-
 =head1 AUTHOR
 
 Leo Charre leocharre at cpan dot org
 
+=head1 COPYRIGHT
+
+Copyright (c) 2009 Leo Charre. All rights reserved.
+
+=head1 LICENSE
+
+This package is free software; you can redistribute it and/or modify it under the same terms as Perl itself, i.e., under the terms of the "Artistic License" or the "GNU General Public License".
+
+=head1 DISCLAIMER
+
+This package is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the "GNU General Public License" for more details.
+
 =cut
+

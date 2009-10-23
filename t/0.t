@@ -3,7 +3,6 @@ use strict;
 use lib './lib';
 use File::Filename 'get_filename_segments';
 use File::Filename::Convention 'get_filename_hash';
-
 my @filenames = (
 '122106-VERIZON 17577-005761-@API.pdf',
 '122705-CHRYSLER FINANCIAL-004689-@API.pdf',
@@ -85,7 +84,7 @@ my $filenaming_convention_fields= [
 
 
 my $filenaming_convention_matchsubs = {
-	date => sub { $_[0]=~/\d{6,8}/ },
+   date => sub { $_[0]=~/\d{6,8}$/ },
 	code => sub { $_[0]=~/^AP[CVIA]*$|^TAX$|^REC$|^EWK$|TWK$|APX$|NOCHECKNUM$/ },	
 	checknum => sub { $_[0]=~/^\d+$/ },
 };
@@ -107,11 +106,15 @@ for (@filenames){
 for (@filenames_bad){
 	my $badfilename = $_;
 
+   warn "\n---\n should not be able to get_filename_hash() for $badfilename\n\n";
 
-  my $hash = get_filename_hash($badfilename,$filenaming_convention_fields, $filenaming_convention_matchsubs);
+   my $hash = get_filename_hash( $badfilename,$filenaming_convention_fields, $filenaming_convention_matchsubs);
+   
 
-
-	ok( not defined $hash);
+   unless( ok( ! defined $hash, 'get_filename_hash()')) {
+      ### $hash
+      die("why getting hash for : $badfilename ?");
+   }
 
 	
 }

@@ -5,11 +5,7 @@ require Exporter;
 use vars qw(@ISA @EXPORT_OK $VERSION);
 @ISA = qw(Exporter);
 @EXPORT_OK = (qw(get_filename_hash));
-
-$VERSION = sprintf "%d.%02d", q$Revision: 1.2 $ =~ /(\d+)/g;
-$File::Filename::Convention::DEBUG = 0;
-sub DEBUG : lvalue { $File::Filename::Convention::DEBUG }
-
+$VERSION = sprintf "%d.%02d", q$Revision: 1.5 $ =~ /(\d+)/g;
 
 sub get_filename_hash {
 	my $filename = shift;
@@ -18,58 +14,54 @@ sub get_filename_hash {
 
 	my $segments =get_filename_segments($filename);
 
-
 	my $try=0;
-
 	
 	CONVENTION :
-	for (@{$filenamingconvention_fields}){
-		my $convention = $_;
+	for my $convention (@{$filenamingconvention_fields}){
 
-
-
-		printf STDERR " CONVENTION MATCH ... try %s \n", ++$try if DEBUG;
+      ++$try;
+		### CONVENTION MATCH try: $try
 		
-		scalar @$convention == scalar @$segments or next;
+		(scalar @$convention == scalar @$segments) or next;
 
 		my $x=0;
 		my $segment_hash={};	
 		
-		for(@$convention) {
-			my $segmentlabel = $_;
+		for my $segmentlabel (@$convention) {
 			my $segmentcontent = @$segments[$x++];
 
-			print STDERR "$segmentlabel:$segmentcontent\n" if DEBUG;
+			### $segmentlabel
+         ### $segmentcontent
 			
 			defined $segmentlabel or next CONVENTION;
 
-			print STDERR "was def.. \n" if DEBUG;
+			### was def
 			
 			my $mustbe;
 			if (ref $segmentlabel eq 'ARRAY'){
 			
-				print STDERR " - was array [$segmentlabel]\n" if DEBUG;
-			
+				### was array: $segmentlabel
 				($segmentlabel,$mustbe) = @$segmentlabel;
-				print STDERR " - split into.. [$segmentlabel] must be [$mustbe]\n" if DEBUG;	
+				### split into: $segmentlabel
+            ### must be: $mustbe
 			}
 
 
 			if (defined $filenamingconvention_matchsubs->{$segmentlabel}){
 
-				print STDERR " has sub?\n" if DEBUG;
+				### has sub?
 				
 				&{$filenamingconvention_matchsubs->{$segmentlabel}}($segmentcontent) or do {
-					print STDERR "sub $segmentlabel returns no for $segmentcontent\n" if DEBUG;
+					### returns no for: $segmentcontent
 					next CONVENTION;
 				};	
 
-				print STDERR " had sub, yes..\n" if DEBUG;
+				### had sub yes
 
 				if(defined $mustbe){
-					print STDERR " mustbe $mustbe\n" if DEBUG;
+					### $mustbe
 					$segmentcontent=~/^$mustbe$/i or next CONVENTION;
-					print STDERR "is\n" if DEBUG;
+					### is
 				}
 
 				$segment_hash->{$segmentlabel} = $segmentcontent;
@@ -84,8 +76,10 @@ sub get_filename_hash {
 		return $segment_hash;	
 	}
 
-	print STDERR "filename $filename matches no convention, tried $try kinds" if DEBUG;
-	return ;
+	### $filename
+   ### matches no conventions
+   ### tries: $try
+	return;
 
 }
 
@@ -220,10 +214,11 @@ This will match case insensitive.
 =head1 SEE ALSO
 
 L<File::Name>
+L<LEOCHARRE::DEBUG>
 
 =head1 Revision
 
-$Revision: 1.2 $
+$Revision: 1.5 $
 
 =head1 AUTHOR
 
